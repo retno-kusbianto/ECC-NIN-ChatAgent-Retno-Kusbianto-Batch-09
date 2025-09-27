@@ -1,0 +1,159 @@
+{
+  "name": "Open Weather",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        -16
+      ],
+      "id": "740dc1c4-c448-4199-8eb1-a0ac0d1aa3c9",
+      "name": "Telegram Trigger",
+      "webhookId": "c2de564d-61f9-42e6-a9be-41cd82573cc8",
+      "credentials": {
+        "telegramApi": {
+          "id": "t5zfM1YVjv6Vx7w5",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        240,
+        208
+      ],
+      "id": "c232a813-56f2-4d98-a9f3-2d163f8f37d9",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "TtVUh8k1DP1WbnTC",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.message.text }}",
+        "options": {
+          "systemMessage": "=Kamu adalah asisten cuaca. Dari data berikut, buat URL OpenWeather API untuk kota tersebut.  \n\nKamu memiliki data kota seperti ini: {{ $json.message.text }}\n\nFormat URL: https://api.openweathermap.org/data/2.5/weather?q=CITY_NAME&appid=16c4abc7e2c3bec22ab4762018496016&units=metric  \n\nPastikan {{ $json.message.text }} diisi sesuai dengan teks yang dikirim user via Telegram.  \n\nSetelah URL sudah berhasil diformat maka kamu wajib menggunakan tool GetData untuk mendapatkan data cuaca kota tersebut dengan memberikan URL yang sudah diformat tadi.  \n\nKamu juga seorang analis cuaca. Dari data cuaca OpenWeather berikut, buat laporan ringkas:  \n- Lokasi (nama kota).  \n- Suhu saat ini (°C), suhu terasa (°C).  \n- Kelembaban, tekanan udara.  \n- Kondisi cuaca (description).  \n- Kecepatan & arah angin.  \n- Jika ada data hujan, tampilkan curah hujan (mm).  \n- Analisis apakah kondisi nyaman atau perlu waspada (misalnya terlalu panas, lembap, hujan, angin kencang).  \n- Gunakan bahasa Indonesia yang mudah dipahami.  \n- Tambahkan emoji 🌤️☔💨🔥❄️ untuk memperjelas\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        224,
+        -16
+      ],
+      "id": "af04eace-d4e4-463b-8566-36a99f5330a1",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "chatId": "7337313868",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        576,
+        -16
+      ],
+      "id": "51f46e39-14b6-450c-b94f-ca2e3f0d94fc",
+      "name": "Sent a text message",
+      "webhookId": "a7b9df5e-426a-4ac5-a66a-8a98198944c2",
+      "credentials": {
+        "telegramApi": {
+          "id": "t5zfM1YVjv6Vx7w5",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('URL', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequestTool",
+      "typeVersion": 4.2,
+      "position": [
+        384,
+        192
+      ],
+      "id": "fe891cc1-b168-4557-b241-dde738d69e82",
+      "name": "GetData"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Sent a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GetData": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "8c6ea945-c85d-4e0d-9e93-0ebfaa927448",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bf9777ff7f6ee49b532881adcd58ff3b12fb3dfd4a0a22657fab11025f433372"
+  },
+  "id": "ksHw4ila7H2Ue7Po",
+  "tags": []
+}
