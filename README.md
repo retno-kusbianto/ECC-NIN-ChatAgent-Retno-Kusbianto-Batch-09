@@ -9,10 +9,10 @@ Mengambil API dari Open Weather, dengan menampilkan data :
 - Kelembapan Tanah
 
 # 🔄 Alur Kerja Workflow
-![Opend Weather Worflow](https://github.com/retno-kusbianto/ECC-NIN-ChatAgent-Retno-Kusbianto-Batch-09/blob/main/Workflow%20n8n_OpenWeather_Telegram.JPG)
+![Opend Weather Worflow](https://github.com/retno-kusbianto/ECC-NIN-ChatAgent-Retno-Kusbianto-Batch-09/blob/main/Folder/Workflow.JPG)
 
-1. Telegram Trigger
-  - Workflow akan aktif setiap kali ada user yang mengirim pesan ke bot Telegram.
+1. HTML / Telegram Trigger
+  - Workflow akan aktif setiap kali ada user yang mengirim pesan lewat chat agent (HTML) ataupun Bot Telegram.
   - Pesan user (misalnya: “Bandung”) akan diteruskan ke workflow.
   
 2. AI Agent (Google Gemini + Tools)
@@ -35,15 +35,23 @@ Mengambil API dari Open Weather, dengan menampilkan data :
     - Analisis singkat (nyaman, perlu waspada, dll)
     - Tambah emoji ☀️☔💨❄️ biar lebih jelas.
    
-5. Send Telegram Message
-  - Hasil analisis cuaca dikirim balik ke user melalui bot Telegram.
+5. Respond to Webhook / Send Telegram Message
+  - Hasil analisis cuaca dikirim balik ke user melalui Chat Agent (HTML) ataupun Bot Telegram.
   - Jadi user langsung dapat jawaban berupa laporan cuaca yang rapi.
 
 ### 📌 KESIMPULAN
 Workflow ini bekerja seperti asisten cuaca otomatis:
-- User: ketik nama kota ke bot Telegram.
+- User: ketik nama kota ke Chat Agent (HTML) ataupun bot Telegram.
 - Workflow: ambil data cuaca → analisis → balas ke user dengan laporan singkat
 
-⚡ Jadi inti workflow: Telegram input → AI Agent + API cuaca → Telegram output.
+⚡ Jadi inti workflow:
+- HTML Webhook (Chat Agent) → AI Agent + API cuaca → Respond Webhook (Outout)
+- Telegram input → AI Agent + API cuaca → Telegram output.
 
-![Output Keadaan Cuaca](https://github.com/retno-kusbianto/ECC-NIN-ChatAgent-Retno-Kusbianto-Batch-09/blob/main/Laporan%20Cuaca.JPG)
+Contoh Output dari Chat Agent / HTML
+
+![Output Keadaan Cuaca_Lewat_Chat_Agent_HTML](https://github.com/retno-kusbianto/ECC-NIN-ChatAgent-Retno-Kusbianto-Batch-09/blob/main/Folder/Output%20Chat%20Agent.JPG)
+
+Contoh Output dari Telegram
+
+![Output Keadaan Cuaca_Lewat_Telegram](https://github.com/retno-kusbianto/ECC-NIN-ChatAgent-Retno-Kusbianto-Batch-09/blob/main/Folder/Output_Telegram.JPG)
